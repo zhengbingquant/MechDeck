@@ -1,7 +1,17 @@
 {
   "name": "mechdeck",
+  "description": "An interactive 3D hangar of transformable mechs: transform, fly and dissect the VF-1J Valkyrie in your browser.",
   "private": true,
   "version": "1.0.0",
+  "license": "MIT",
+  "author": "Teh Bing Quan",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhengbingquant/MechDeck.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zhengbingquant/MechDeck/issues"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite",
