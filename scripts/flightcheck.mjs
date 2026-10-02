@@ -17,7 +17,7 @@ const errors = [];
 page.on('console', (m) => { if (m.type() === 'error' || m.type() === 'warning') errors.push(`[${m.type()}] ${m.text()}`); });
 page.on('pageerror', (e) => errors.push(`[pageerror] ${e.message}`));
 await page.goto(base);
-await page.waitForFunction(() => window.__variable?.ready, null, { timeout: 30000 });
+await page.waitForFunction(() => window.__mechdeck?.ready, null, { timeout: 30000 });
 
 const hud = async () => (await page.locator('[data-testid=flight-hud]').innerText()).replace(/\s+/g, ' ');
 const hold = async (key, ms) => { await page.keyboard.down(key); await page.waitForTimeout(ms); await page.keyboard.up(key); };

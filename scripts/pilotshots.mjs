@@ -11,10 +11,10 @@ async function open(viewport, mobile = false) {
   page.on('console', (m) => { if (m.type() === 'error' || m.type() === 'warning') errors.push(`[${m.type()}] ${m.text()}`); });
   page.on('pageerror', (e) => errors.push(`[pageerror] ${e.message}`));
   await page.goto(base);
-  await page.waitForFunction(() => window.__variable?.ready && window.__variable?.setCameraView, null, { timeout: 30000 });
+  await page.waitForFunction(() => window.__mechdeck?.ready && window.__mechdeck?.setCameraView, null, { timeout: 30000 });
   return page;
 }
-const settle = (page, t) => page.waitForFunction((t) => Math.abs(window.__variable.store.getState().progress - t) < 1e-6, t, { timeout: 20000 });
+const settle = (page, t) => page.waitForFunction((t) => Math.abs(window.__mechdeck.store.getState().progress - t) < 1e-6, t, { timeout: 20000 });
 
 const page = await open({ width: 1440, height: 900 });
 await page.getByTestId('pilot-toggle').click();
@@ -51,10 +51,10 @@ await page.waitForTimeout(2000);
 await page.keyboard.down('w');
 await page.waitForTimeout(900);
 await page.evaluate(() => {
-  const d = window.__variable;
+  const d = window.__mechdeck;
   const t = d.cameraTarget();
   d.controls.enabled = true;
-  const h = window.__variable.store.getState();
+  const h = window.__mechdeck.store.getState();
   void h;
 });
 await page.screenshot({ path: 'shots/pilot-battroid-walk2.png' });

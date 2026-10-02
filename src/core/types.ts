@@ -3,7 +3,7 @@ import type { Airframe } from './flight/model';
 import type { DriveParams, DriveState } from './drive/locomotion';
 
 /**
- * Contracts every mech in the VARIABLE hangar implements. The app shell (UI,
+ * Contracts every mech in the MechDeck hangar implements. The app shell (UI,
  * camera, store, search) only talks to these, so adding a mech means adding a
  * folder under src/mechs/ and one registry entry.
  */

@@ -2,7 +2,7 @@ import { test, expect, type Page } from '@playwright/test';
 
 /**
  * End-to-end checks on desktop (1440×900) and mobile (390×844, touch). They
- * talk to the scene through window.__variable (see src/scene/debug.ts).
+ * talk to the scene through window.__mechdeck (see src/scene/debug.ts).
  */
 
 let problems: string[] = [];
@@ -14,7 +14,7 @@ test.beforeEach(async ({ page }) => {
   });
   page.on('pageerror', (e) => problems.push(`[pageerror] ${e.message}`));
   await page.goto('/');
-  await page.waitForFunction(() => window.__variable?.ready && window.__variable?.setCameraView, null, { timeout: 30_000 });
+  await page.waitForFunction(() => window.__mechdeck?.ready && window.__mechdeck?.setCameraView, null, { timeout: 30_000 });
 });
 
 test.afterEach(() => {
@@ -31,7 +31,7 @@ async function openSheet(page: Page, tab: 'systems' | 'info' | 'flight' | 'pilot
 
 async function settle(page: Page, target: number) {
   await page.waitForFunction((t) => {
-    const s = window.__variable!.store!.getState() as { progress: number };
+    const s = window.__mechdeck!.store!.getState() as { progress: number };
     return Math.abs(s.progress - t) < 1e-6;
   }, target, { timeout: 20_000 });
   await page.waitForTimeout(1200); // camera follow catches up
@@ -40,7 +40,7 @@ async function settle(page: Page, target: number) {
 /** Page-space bounds of the model's silhouette: every exterior vertex, projected through the live camera. */
 async function modelRect(page: Page) {
   return page.evaluate(() => {
-    const d = window.__variable!;
+    const d = window.__mechdeck!;
     const r = d.canvas!.getBoundingClientRect();
     let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
     const v = d.camera!.position.clone();
@@ -60,14 +60,22 @@ async function modelRect(page: Page) {
   });
 }
 
-test('brands the page VARIABLE and lists the hangar', async ({ page }) => {
-  await expect(page).toHaveTitle(/VARIABLE/);
-  await expect(page.getByRole('heading', { name: 'VARIABLE' })).toBeVisible();
+test('brands the page MechDeck and lists the hangar', async ({ page }) => {
+  await expect(page).toHaveTitle(/MechDeck/);
+  await expect(page.getByRole('heading', { name: 'MechDeck' })).toBeVisible();
+  // Link previews (X, chat apps) read the description and the Open Graph / Twitter tags.
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /MechDeck/);
+  await expect(page.locator('meta[property="og:site_name"]')).toHaveAttribute('content', 'MechDeck');
+  await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', /MechDeck/);
+  await expect(page.locator('meta[name="twitter:title"]')).toHaveAttribute('content', /MechDeck/);
+  await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary');
+  // The old name is gone from the page.
+  await expect(page.getByText('VARIABLE', { exact: true })).toHaveCount(0);
   await page.getByTestId('mech-switcher').click();
   await expect(page.getByRole('menuitemradio', { name: /VF-1J/ })).toHaveAttribute('aria-checked', 'true');
-  await expect(page.getByText('More variable fighters')).toBeVisible();
+  await expect(page.getByText('More mechs')).toBeVisible();
   await page.keyboard.press('Escape');
-  await expect(page.getByText('More variable fighters')).toBeHidden();
+  await expect(page.getByText('More mechs')).toBeHidden();
 });
 
 test('transforms smoothly between the three modes with the buttons and the slider', async ({ page }) => {
@@ -108,11 +116,11 @@ test('reveals the anatomy with at least six independently toggleable systems', a
   const boxes = page.locator('[data-testid^="system-"]');
   expect(await boxes.count()).toBeGreaterThanOrEqual(6);
   await page.getByTestId('system-engines').uncheck();
-  const systems = await page.evaluate(() => (window.__variable!.store!.getState() as { systems: Record<string, boolean> }).systems);
+  const systems = await page.evaluate(() => (window.__mechdeck!.store!.getState() as { systems: Record<string, boolean> }).systems);
   expect(systems.engines).toBe(false);
   expect(systems.power).toBe(true);
   const visible = await page.evaluate(() => {
-    const parts = window.__variable!.runtime!.parts;
+    const parts = window.__mechdeck!.runtime!.parts;
     const vis = (id: string) => parts.get(id)!.some((m) => m.visible);
     return { turbine: vis('turbine-port'), core: vis('power-core') };
   });
@@ -124,7 +132,7 @@ test('inspects a part when it is tapped on the model', async ({ page }) => {
   await settle(page, 1);
   // Tap the centre of the chest plate, projected from the scene.
   const pt = await page.evaluate(() => {
-    const d = window.__variable!;
+    const d = window.__mechdeck!;
     const box = d.runtime!.partBox('chest-plate');
     const v = box.getCenter(box.min.clone()).project(d.camera!);
     const r = d.canvas!.getBoundingClientRect();
@@ -137,7 +145,7 @@ test('inspects a part when it is tapped on the model', async ({ page }) => {
 });
 
 test('search finds a part, opens the cutaway for internals and flies the camera to it', async ({ page }) => {
-  const before = await page.evaluate(() => window.__variable!.camera!.position.toArray());
+  const before = await page.evaluate(() => window.__mechdeck!.camera!.position.toArray());
   const input = page.getByTestId('search-input');
   await input.click();
   await input.fill('starboard turbine');
@@ -145,9 +153,9 @@ test('search finds a part, opens the cutaway for internals and flies the camera 
   await input.press('Enter');
   await openSheet(page, 'info');
   await expect(page.getByTestId('part-name')).toHaveText('Starboard Turbine');
-  expect(await page.evaluate(() => (window.__variable!.store!.getState() as { cutaway: boolean }).cutaway)).toBe(true);
+  expect(await page.evaluate(() => (window.__mechdeck!.store!.getState() as { cutaway: boolean }).cutaway)).toBe(true);
   await page.waitForTimeout(1300);
-  const after = await page.evaluate(() => window.__variable!.camera!.position.toArray());
+  const after = await page.evaluate(() => window.__mechdeck!.camera!.position.toArray());
   const moved = Math.hypot(after[0] - before[0], after[1] - before[1], after[2] - before[2]);
   expect(moved).toBeGreaterThan(2);
 });
@@ -156,7 +164,7 @@ test('flies in the flight lab: HUD, controls and a clean exit', async ({ page })
   await openSheet(page, 'flight');
   await page.getByTestId('flight-toggle').click();
   await expect(page.getByTestId('hud-speed')).toBeVisible({ timeout: 20_000 });
-  const tel = () => page.evaluate(() => (window.__variable!.store!.getState() as { telemetry: { bank: number; altitude: number; mach: number } }).telemetry);
+  const tel = () => page.evaluate(() => (window.__mechdeck!.store!.getState() as { telemetry: { bank: number; altitude: number; mach: number } }).telemetry);
   const t0 = await tel();
   expect(t0.altitude).toBeGreaterThan(2500);
   expect(t0.mach).toBeGreaterThan(0.5);
@@ -175,8 +183,8 @@ test('flies in the flight lab: HUD, controls and a clean exit', async ({ page })
 
 test('pilot mode: skims the GERWALK and walks and jumps the Battroid; the camera keeps up', async ({ page }) => {
   type Tel = { mode: string | null; speed: number; hover: number; airborne: boolean };
-  const tel = () => page.evaluate(() => (window.__variable!.store!.getState() as { pilotTelemetry: Tel | null }).pilotTelemetry);
-  const where = () => page.evaluate(() => window.__variable!.runtime!.markerWorld('torsoBase').toArray());
+  const tel = () => page.evaluate(() => (window.__mechdeck!.store!.getState() as { pilotTelemetry: Tel | null }).pilotTelemetry);
+  const where = () => page.evaluate(() => window.__mechdeck!.runtime!.markerWorld('torsoBase').toArray());
   const moved = (a: number[], b: number[]) => Math.hypot(b[0] - a[0], b[2] - a[2]);
   /** Hold the stick forward (the on-screen stick on phones, W on desktop) with boost / jump held for `ms`. */
   const drive = async (ms: number, opts: { boost?: boolean; during?: () => Promise<void> } = {}) => {
@@ -254,7 +262,7 @@ test('pilot mode: skims the GERWALK and walks and jumps the Battroid; the camera
 
 test('joint control: poses Battroid joints, stops a joint at its first contact, and resets', async ({ page }) => {
   const rotX = (bone: string) =>
-    page.evaluate((b) => (window.__variable!.runtime as unknown as { mecha: { bones: Record<string, { rotation: { x: number } }> } }).mecha.bones[b].rotation.x, bone);
+    page.evaluate((b) => (window.__mechdeck!.runtime as unknown as { mecha: { bones: Record<string, { rotation: { x: number } }> } }).mecha.bones[b].rotation.x, bone);
   await page.getByTestId('mode-battroid').click();
   await settle(page, 1);
   if (narrow(page)) await page.getByTestId('tab-pose').click();
@@ -280,14 +288,14 @@ test('joint control: poses Battroid joints, stops a joint at its first contact, 
 });
 
 test('plays synthesised sound effects after the first interaction, and mutes', async ({ page }) => {
-  const snd = () => page.evaluate(() => window.__variable!.sound!());
+  const snd = () => page.evaluate(() => window.__mechdeck!.sound!());
   // Nothing plays before the user interacts (browser autoplay rules).
   expect((await snd()).state).toBe('none');
   // The tap that starts a conversion also unlocks audio.
   await page.getByTestId('mode-gerwalk').click();
-  await page.waitForFunction(() => window.__variable!.sound!().state === 'running', null, { timeout: 5000 });
+  await page.waitForFunction(() => window.__mechdeck!.sound!().state === 'running', null, { timeout: 5000 });
   // Servos whine while it converts; clunks mark each assembly locking home.
-  await page.waitForFunction(() => window.__variable!.sound!().servo > 0.5, null, { timeout: 5000 });
+  await page.waitForFunction(() => window.__mechdeck!.sound!().servo > 0.5, null, { timeout: 5000 });
   await settle(page, 0.5);
   const done = await snd();
   expect(done.oneShots).toBeGreaterThan(3);
@@ -324,7 +332,7 @@ test('uses a bottom sheet on phones and a sidebar on desktop', async ({ page }) 
 test('lets the user zoom and pan freely; Home brings the craft back', async ({ page }) => {
   const view = () =>
     page.evaluate(() => {
-      const d = window.__variable!;
+      const d = window.__mechdeck!;
       const t = d.cameraTarget!();
       const p = d.camera!.position;
       return { dist: Math.hypot(p.x - t[0], p.y - t[1], p.z - t[2]), target: t };

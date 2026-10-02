@@ -225,7 +225,7 @@ export function App() {
       <header className="topbar">
         <div className="brand">
           <Logo size={34} />
-          <h1 className="wordmark">VARIABLE</h1>
+          <h1 className="wordmark">MechDeck</h1>
         </div>
         <MechSwitcher />
         <SearchBox />

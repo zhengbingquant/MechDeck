@@ -1,6 +1,6 @@
-# VARIABLE
+# MechDeck
 
-An interactive 3D hangar of transformable variable fighters, built with React,
+An interactive 3D hangar of transformable mechs, built with React,
 three.js and react-three-fiber. It is a static site with no API keys, and it
 runs on desktop and on touch devices.
 

@@ -10,7 +10,7 @@
     </linearGradient>
   </defs>
   <rect width="64" height="64" rx="14" fill="#0b1426"/>
-  <path d="M2 10 H18 L33 46 L29.5 56 Z" fill="url(#l)"/>
-  <path d="M62 10 H49 L35.2 44.5 L31.8 53 Z" fill="url(#r)"/>
-  <path d="M24 10 H40 L32 27 Z" fill="#e2402f"/>
+  <path d="M7 52 V13 H17 L31.4 37.4 V52 L17 28 V52 Z" fill="url(#l)"/>
+  <path d="M57 52 V13 H47 L32.6 37.4 V52 L47 28 V52 Z" fill="url(#r)"/>
+  <path d="M19.5 13 H44.5 L32 34 Z" fill="#e2402f"/>
 </svg>

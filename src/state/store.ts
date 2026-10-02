@@ -113,7 +113,7 @@ interface AppState {
   reset(): void;
 }
 
-const SOUND_KEY = 'variable.sound';
+const SOUND_KEY = 'mechdeck.sound';
 const storedSound = () => {
   try {
     return typeof localStorage === 'undefined' || localStorage.getItem(SOUND_KEY) !== 'off';

@@ -54,10 +54,10 @@ h1, h2, h3, p { margin: 0; }
 .brand { display: flex; align-items: center; gap: 9px; min-width: 0; flex: none; }
 .brand .logo { width: 34px; height: 34px; flex: none; filter: drop-shadow(0 0 6px rgba(88, 200, 255, 0.35)); }
 .wordmark {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 800;
-  letter-spacing: 0.34em;
-  margin-right: -0.34em;
+  letter-spacing: 0.1em;
+  margin-right: -0.1em;
   white-space: nowrap;
   font-style: italic;
   background: linear-gradient(95deg, #ffffff 0%, #bfefff 45%, #58a6ff 100%);
@@ -65,7 +65,7 @@ h1, h2, h3, p { margin: 0; }
   background-clip: text;
   color: transparent;
 }
-.app.narrow .wordmark { font-size: 15px; letter-spacing: 0.2em; margin-right: -0.2em; }
+.app.narrow .wordmark { font-size: 16px; letter-spacing: 0.06em; margin-right: -0.06em; }
 
 /* ---------- hangar switcher ---------- */
 .switcher { position: relative; min-width: 0; }

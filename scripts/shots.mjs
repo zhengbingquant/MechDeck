@@ -74,13 +74,13 @@ const errors = [];
 page.on('console', (m) => { if (m.type() === 'error' || m.type() === 'warning') errors.push(`[${m.type()}] ${m.text()}`); });
 page.on('pageerror', (e) => errors.push(`[pageerror] ${e.message}`));
 await page.goto(base);
-await page.waitForFunction(() => window.__variable?.ready && window.__variable?.setCameraView, null, { timeout: 30000 });
+await page.waitForFunction(() => window.__mechdeck?.ready && window.__mechdeck?.setCameraView, null, { timeout: 30000 });
 for (const [name, [t, pos, tgt]] of Object.entries(SHOTS)) {
   if (only && !only.includes(name)) continue;
   await page.evaluate(({ t, pos, tgt, cutaway }) => {
-    window.__variable.store.setState({ cutaway });
-    window.__variable.setProgressNow(t);
-    window.__variable.setCameraView(pos, tgt);
+    window.__mechdeck.store.setState({ cutaway });
+    window.__mechdeck.setProgressNow(t);
+    window.__mechdeck.setCameraView(pos, tgt);
   }, { t, pos, tgt, cutaway: !!args.cutaway });
   await page.waitForTimeout(Number(args.wait ?? 250));
   await page.screenshot({ path: `shots/${name}${args.cutaway ? '-cut' : ''}.png` });

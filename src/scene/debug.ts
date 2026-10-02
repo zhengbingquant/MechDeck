@@ -5,7 +5,7 @@ import type { MechRuntime } from '../core/types';
  * Small automation surface for e2e tests and screenshot tooling.
  * Everything here reads/writes the same state the UI uses.
  */
-export interface VariableDebug {
+export interface MechDeckDebug {
   ready: boolean;
   runtime?: MechRuntime;
   camera?: THREE.PerspectiveCamera;
@@ -29,13 +29,13 @@ export interface VariableDebug {
 
 declare global {
   interface Window {
-    __variable?: VariableDebug;
+    __mechdeck?: MechDeckDebug;
   }
 }
 
-export function debugHandle(): VariableDebug {
-  if (!window.__variable) window.__variable = { ready: false };
-  return window.__variable;
+export function debugHandle(): MechDeckDebug {
+  if (!window.__mechdeck) window.__mechdeck = { ready: false };
+  return window.__mechdeck;
 }
 
 /** Project a world point into CSS pixels relative to the page. */

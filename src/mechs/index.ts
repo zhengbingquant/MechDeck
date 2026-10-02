@@ -2,7 +2,7 @@ import type { MechDefinition } from '../core/types';
 import { vf1j } from './vf1j';
 
 /**
- * The VARIABLE hangar. To add a mech: build it under src/mechs/<id>/ exporting a
+ * The MechDeck hangar. To add a mech: build it under src/mechs/<id>/ exporting a
  * MechDefinition, then list it here.
  */
 export const MECHS: MechDefinition[] = [vf1j];

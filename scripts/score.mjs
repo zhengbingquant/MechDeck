@@ -30,7 +30,7 @@ mkdirSync('shots', { recursive: true });
 const browser = await chromium.launch({ channel: 'chrome', args: ['--ignore-gpu-blocklist', '--enable-unsafe-swiftshader'] });
 const page = await browser.newPage({ viewport: { width: W, height: H } });
 await page.goto('http://localhost:4173');
-await page.waitForFunction(() => window.__variable?.ready && window.__variable?.silhouette, null, { timeout: 30000 });
+await page.waitForFunction(() => window.__mechdeck?.ready && window.__mechdeck?.silhouette, null, { timeout: 30000 });
 // Only the canvas: the page's buttons and hints overlay it and would read as model pixels.
 await page.addStyleTag({ content: 'body * { visibility: hidden !important; } canvas { visibility: visible !important; }' });
 
@@ -40,7 +40,7 @@ const results = [];
 for (const name of names) {
   const v = { ...VIEWS[name], hide: [...(VIEWS[name].hide ?? []), ...extraHide] };
   const geo = await page.evaluate(({ v }) => {
-    const d = window.__variable;
+    const d = window.__mechdeck;
     d.store.setState({ showJoints: false });
     d.setProgressNow(v.t);
     const posed = {};
@@ -73,7 +73,7 @@ for (const name of names) {
   // Measure the registration again from the camera as it is now, right before the capture (the
   // stage's camera rig may still have been settling since the first measurement).
   const now = await page.evaluate(() => {
-    const d = window.__variable;
+    const d = window.__mechdeck;
     const cam = d.camera;
     cam.updateMatrixWorld();
     const r = d.canvas.getBoundingClientRect();
@@ -191,7 +191,7 @@ for (const name of names) {
   if (process.env.SCAN) console.log(out.lines.join('\n'));
   results.push(`${name.padEnd(15)} IoU ${(out.iou * 100).toFixed(1)}%  (line art the model misses ${(out.missing * 100).toFixed(1)}%, model beyond the line art ${(out.excess * 100).toFixed(1)}%)`);
   if (v.pose) console.log(`${name}  posed ${JSON.stringify(geo.posed)}`);
-  await page.evaluate(({ v }) => { const d = window.__variable; d.runtime.resetDofs?.(); for (const id of v.hide ?? []) for (const m of d.runtime.parts.get(id) ?? []) m.visible = true; d.silhouette(false); d.runtime.setGear?.(1); d.controls.enabled = true; d.controls.maxDistance = 120; d.camera.fov = 34; d.camera.near = 0.3; d.camera.far = 400; d.camera.up.set(0, 1, 0); d.camera.updateProjectionMatrix(); }, { v });
+  await page.evaluate(({ v }) => { const d = window.__mechdeck; d.runtime.resetDofs?.(); for (const id of v.hide ?? []) for (const m of d.runtime.parts.get(id) ?? []) m.visible = true; d.silhouette(false); d.runtime.setGear?.(1); d.controls.enabled = true; d.controls.maxDistance = 120; d.camera.fov = 34; d.camera.near = 0.3; d.camera.far = 400; d.camera.up.set(0, 1, 0); d.camera.updateProjectionMatrix(); }, { v });
 }
 console.log(results.join('\n'));
 await browser.close();

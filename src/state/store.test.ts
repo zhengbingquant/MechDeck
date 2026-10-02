@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { useApp, stepProgress, modeLabel } from './store';
 import { MECHS, getMech } from '../mechs';
 
@@ -164,5 +164,21 @@ describe('app store', () => {
     st().setDof('kneeL.bend', 10);
     st().resetDofs();
     expect(st().dofs).toEqual({});
+  });
+});
+
+describe('sound preference', () => {
+  afterEach(() => vi.unstubAllGlobals());
+
+  it('is remembered across visits under the MechDeck key', () => {
+    const saved = new Map<string, string>();
+    vi.stubGlobal('localStorage', {
+      getItem: (k: string) => saved.get(k) ?? null,
+      setItem: (k: string, v: string) => void saved.set(k, v),
+    });
+    useApp.getState().setSoundOn(false);
+    expect([...saved]).toEqual([['mechdeck.sound', 'off']]);
+    useApp.getState().setSoundOn(true);
+    expect(saved.get('mechdeck.sound')).toBe('on');
   });
 });

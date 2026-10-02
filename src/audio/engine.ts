@@ -1,5 +1,5 @@
 /**
- * Procedural sound for VARIABLE, synthesised with the Web Audio API (no audio
+ * Procedural sound for MechDeck, synthesised with the Web Audio API (no audio
  * files): transformation servos and lock clunks, the FF-2001 turbines' whine
  * and jet roar with an overboost rumble, the Battroid's footfalls, vernier
  * blasts and landings, and soft UI ticks. Silent until a user gesture unlocks

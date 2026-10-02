@@ -31,13 +31,13 @@ mkdirSync('shots', { recursive: true });
 const browser = await chromium.launch({ channel: 'chrome', args: ['--ignore-gpu-blocklist', '--enable-unsafe-swiftshader'] });
 const page = await browser.newPage({ viewport: { width: W, height: H } });
 await page.goto('http://localhost:4173');
-await page.waitForFunction(() => window.__variable?.ready && window.__variable?.controls, null, { timeout: 30000 });
+await page.waitForFunction(() => window.__mechdeck?.ready && window.__mechdeck?.controls, null, { timeout: 30000 });
 
 for (const name of names) {
   const v = VIEWS[name];
   // Near-orthographic camera: 1° field of view from ~900 m.
   const shot = await page.evaluate(({ v }) => {
-    const d = window.__variable;
+    const d = window.__mechdeck;
     d.setProgressNow(v.t);
     d.studio(true);
     const cam = d.camera;
@@ -60,7 +60,7 @@ for (const name of names) {
   await page.waitForTimeout(400);
   const render = await page.locator('canvas').first().screenshot();
   const proj = await page.evaluate(() => {
-    const d = window.__variable;
+    const d = window.__mechdeck;
     const r = d.canvas.getBoundingClientRect();
     let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity, tipY = 0;
     const p = d.camera.position.clone();
@@ -121,6 +121,6 @@ for (const name of names) {
   }, { renderB64: render.toString('base64'), refB64, crop: v.crop, band: v.band, align: v.align, proj });
   writeFileSync(`shots/compare-${name}.png`, Buffer.from(out.png, 'base64'));
   console.log(`${name}: line-art/model height ratio ${out.ratioH.toFixed(3)}, width ratio ${out.ratioW.toFixed(3)} → shots/compare-${name}.png`);
-  await page.evaluate(() => { const d = window.__variable; d.studio(false); d.controls.enabled = true; d.controls.maxDistance = 120; d.camera.fov = 34; d.camera.near = 0.3; d.camera.far = 400; d.camera.up.set(0, 1, 0); d.camera.updateProjectionMatrix(); });
+  await page.evaluate(() => { const d = window.__mechdeck; d.studio(false); d.controls.enabled = true; d.controls.maxDistance = 120; d.camera.fov = 34; d.camera.near = 0.3; d.camera.far = 400; d.camera.up.set(0, 1, 0); d.camera.updateProjectionMatrix(); });
 }
 await browser.close();

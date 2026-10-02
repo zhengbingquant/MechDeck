@@ -3,7 +3,7 @@ import { MECHS } from '../mechs';
 import { useApp } from '../state/store';
 import { useMech } from './useMech';
 
-/** Hangar menu: pick which variable fighter is on the stage. */
+/** Hangar menu: pick which mech is on the stage. */
 export function MechSwitcher() {
   const mech = useMech();
   const setMech = useApp((s) => s.setMech);
@@ -60,7 +60,7 @@ export function MechSwitcher() {
             </button>
           ))}
           <div className="menu-item soon" role="menuitem" aria-disabled="true">
-            <strong>More variable fighters</strong>
+            <strong>More mechs</strong>
             <span className="muted">Coming soon to the hangar.</span>
           </div>
         </div>
