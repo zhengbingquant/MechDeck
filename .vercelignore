@@ -1,0 +1,10 @@
+node_modules
+dist
+test-results
+playwright-report
+shots
+.claude
+*.log
+.env*
+.vercel
+scratch
