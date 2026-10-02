@@ -12,14 +12,14 @@
   ],
   "redirects": [
     {
-      "source": "/:path*",
+      "source": "/",
       "has": [{ "type": "host", "value": "variable-liard.vercel.app" }],
-      "destination": "https://mechdeck.vercel.app/:path*",
+      "destination": "https://mechdeck.vercel.app/",
       "permanent": true
     },
     {
       "source": "/:path*",
-      "has": [{ "type": "host", "value": "variable-tehbingquan-7996.vercel.app" }],
+      "has": [{ "type": "host", "value": "variable-liard.vercel.app" }],
       "destination": "https://mechdeck.vercel.app/:path*",
       "permanent": true
     }
