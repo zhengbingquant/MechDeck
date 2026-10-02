@@ -23,6 +23,11 @@
   <img src="docs/media/transform.gif" width="600" alt="VF-1J 从战机形态变形为 GERWALK，再变为人形形态">
 </p>
 
+<p align="center">
+  <a href="https://www.bilibili.com/video/BV1K5aQ6qEKq"><img alt="在哔哩哔哩观看演示视频" src="https://img.shields.io/badge/watch_the_demo-on_Bilibili-00a1d6?style=flat-square&logo=bilibili&logoColor=white"></a>
+  <a href="https://x.com/neo_7749/status/2106042557776146556"><img alt="在 X 上观看演示视频" src="https://img.shields.io/badge/watch_the_demo-on_X-000000?style=flat-square&logo=x&logoColor=white"></a>
+</p>
+
 MechDeck 完全在浏览器中运行。你可以 360° 旋转查看 **VF-1J 女武神**，在真实的骨骼绑定上让它在战机（Fighter）、GERWALK 与人形（Battroid）三种形态之间变形；用 X 光透视查看引擎和作动器；用飞行模型驾驶它飞行；或者操纵它在机库地面上行走。
 
 **[打开在线演示 →](https://mechdeck.vercel.app)** 这是一个纯静态网站，没有后端，也不需要任何 API 密钥，桌面端和触屏设备都能运行（只需一个支持 WebGL2 的浏览器）。基于 React、three.js 和 react-three-fiber 构建。VF-1J 是机库中的第一台机体，之后还可以加入更多机体（见[添加机体](#添加机体)）。
