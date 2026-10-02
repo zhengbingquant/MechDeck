@@ -101,6 +101,9 @@ export const BONES: BoneDef[] = [
   // Antenna boom off the module's tail end; the whip telescopes out of it in GERWALK.
   { id: 'mast', parent: 'tailModule', pos: [0, -D.tail.length, MAST_Z], joint: 'antenna mast hinge' },
   { id: 'whip', parent: 'mast', pos: [0, -D.tail.mastLen + 0.02, 0], joint: 'antenna whip telescope' },
+  // Pop-out vernier nozzles in the belly's well (they stand up for GERWALK).
+  { id: 'vernierL', parent: 'tailModule', pos: [D.tail.vernier[0], D.tail.vernier[1], D.tail.depth - 0.25], joint: 'port vernier nozzle mount' },
+  { id: 'vernierR', parent: 'tailModule', pos: [-D.tail.vernier[0], D.tail.vernier[1], D.tail.depth - 0.25], joint: 'starboard vernier nozzle mount' },
   // Wing-root carriages: in flight they sit in the gloves; for Battroid they run up the back.
   { id: 'wingRootL', parent: 'torso', pos: D.wing.pivot, joint: 'port wing-root carriage' },
   { id: 'wingRootR', parent: 'torso', pos: [-D.wing.pivot[0], D.wing.pivot[1], D.wing.pivot[2]], joint: 'starboard wing-root carriage' },

@@ -113,6 +113,12 @@ export const D = {
     finCant: 22.5,
     /** Fin root leading edge / fold hinge on the module's side edge. */
     finRoot: [0.86, -0.05, -0.02] as const,
+    /**
+     * The two pop-out vernier nozzles in the belly's well (module frame, port one): flush in flight
+     * and Battroid, they stand up out of the well, mouths turned toward the hinge end, in GERWALK
+     * (the kit's two nozzles at the rear of the block's top).
+     */
+    vernier: [0.24, -1.2] as const,
     /** Antenna boom off the module's tail end, and the whip that extends from it in GERWALK. */
     mastLen: 1.4,
     whipLen: 1.3,

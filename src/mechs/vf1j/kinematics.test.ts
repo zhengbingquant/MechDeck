@@ -174,7 +174,7 @@ describe('GERWALK mode (progress 0.5), as in the official line art', () => {
   it('is more compact than the Fighter and lower than the Battroid', () => {
     const { box } = at(0.5);
     const s = size(box);
-    // (1 m shorter at least; the fins folded flat on the raised back block trail aft of it.)
+    // (1 m shorter at least; the fins lie folded flat under the back block, pointing forward.)
     expect(s.z).toBeLessThan(SPECS.fighter.length - 1);
     expect(s.y).toBeLessThan(SPECS.battroid.height - 1);
   });
@@ -193,23 +193,28 @@ describe('GERWALK mode (progress 0.5), as in the official line art', () => {
     }
   });
 
-  it('stands the back block on the back leaning forward, belly up and aft, antenna whip up and fins folded flat', () => {
-    // Transformation sheet (fins fold, then the whole back block rises past vertical as an
-    // airbrake), the GERWALK line art (MAHQ) and the VF-1J GERWALK kit: the block stands on the
-    // back behind the canopy leaning forward, its aft vent grille facing forward, red disc and
-    // verniers facing up and aft, fins flat at its base.
+  it('lays the back block flat on the back behind the cockpit, as on the GERWALK kit', () => {
+    // Transformation sheet: the fins fold, then the whole back block rises as an airbrake and goes
+    // on over onto the back. Hasegawa VF-1J GERWALK kit: the block lies flat behind the cockpit,
+    // its aft face (the recessed three-port vent) turned forward, the red disc on top, two vernier
+    // nozzles standing up and aft at its rear, the antenna standing up at its front and the fins
+    // folded flat under it, pointing forward.
     const { m } = at(0.5);
     const belly = new THREE.Vector3(0, 0, 1).transformDirection(mecha.bones.tailModule.matrixWorld);
-    expect(belly.y, 'belly faces up').toBeGreaterThan(0.7);
-    expect(belly.z, '…and aft').toBeLessThan(-0.3);
-    expect(m('tailEnd').z - m('finRootL').z, 'aft face turned forward').toBeGreaterThan(1.5);
-    const rise = m('tailEnd').y - m('finRootL').y;
-    expect(rise, 'leans forward: neither flat nor upright').toBeGreaterThan(0.8);
-    expect(rise).toBeLessThan(1.8);
-    expect(m('mastTip').y).toBeGreaterThan(m('tailEnd').y + 1.5);
+    expect(belly.y, 'belly (red disc, verniers) faces up').toBeGreaterThan(0.95);
+    expect(m('tailEnd').z - m('finRootL').z, 'aft face turned forward').toBeGreaterThan(2);
+    expect(Math.abs(m('tailEnd').y - m('finRootL').y), 'lies flat').toBeLessThan(0.35);
+    expect(m('tailEnd').z, 'behind the cockpit').toBeLessThan(m('canopyIn').z - 1);
+    expect(m('mastTip').y, 'antenna up').toBeGreaterThan(m('tailEnd').y + 1.5);
     for (const S of ['L', 'R']) {
       const span = m(`finTip${S}`).sub(m(`finRoot${S}`));
-      expect(Math.abs(span.y) / span.length(), `fin ${S} flat`).toBeLessThan(0.3);
+      expect(Math.abs(span.y) / span.length(), `fin ${S} flat`).toBeLessThan(0.2);
+      expect(span.z, `fin ${S} forward`).toBeGreaterThan(2);
+      // The verniers stand up out of the block's top, their mouths turned aft.
+      const mouth = m(`vernierMouth${S}`);
+      const out = mecha.bones.tailModule.worldToLocal(mouth.clone()).z - D.tail.depth;
+      expect(out, `vernier ${S} stands out of the block's top`).toBeGreaterThan(0.08);
+      expect(mouth.z, `vernier ${S} aft`).toBeLessThan(m(`vernierBase${S}`).z - 0.1);
     }
   });
 

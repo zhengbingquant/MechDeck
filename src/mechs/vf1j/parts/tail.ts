@@ -26,32 +26,55 @@ export function buildTail(b: Builder) {
     b.ext('tail-module', 'tailModule', move(cbox(hw - cw, ch - 0.02, dp - top, 0.03), (s * (hw + cw)) / 2, -ch / 2 - 0.01, top + (dp - top) / 2), 'white');
   }
   b.ext('tail-module', 'tailModule', move(new THREE.BoxGeometry(cw * 2 - 0.02, ch - 0.06, 0.012), 0, -ch / 2, top + 0.006), 'navy', { edges: false });
-  /* main body, tapering to the aft face (±0.67 × 0.4 m in the five-view rear view) */
+  /* main body, tapering to the aft face (±0.67 × 0.4 m in the five-view rear view). The aft face is
+     bevelled on its belly side, and the recessed vent with its three ports lies on the bevel: in
+     GERWALK, with the block flipped flat onto the back, it is the sloping front face (the kit). */
   const L = TL.length;
+  const aftH = 0.14;
+  const bevel = 0.28;
   b.ext('tail-module', 'tailModule', loft([
-    { y: -L, pts: chamferRect(1.34, dp - 0.05, 0.08, 0, (dp - 0.05) / 2) },
-    { y: -L + 0.5, pts: chamferRect(1.6, dp, 0.1, 0, dp / 2) },
+    { y: -L, pts: chamferRect(1.34, aftH, 0.04, 0, aftH / 2) },
+    { y: -L + bevel, pts: chamferRect(1.5, dp, 0.1, 0, dp / 2) },
     { y: -ch, pts: chamferRect(hw * 2, dp, 0.1, 0, dp / 2) },
   ]), 'white');
-  // Aft face: dark vent panel and tail lights.
-  b.ext('tail-module', 'tailModule', move(new THREE.BoxGeometry(1.0, 0.03, 0.26), 0, -L - 0.005, 0.24), 'black', { edges: false });
+  // The bevel's mid-line and its outward normal (aft and toward the belly): things laid on it.
+  const tilt = Math.atan2(dp - aftH, bevel);
+  const onBevel = (g: THREE.BufferGeometry, x: number, lift: number) =>
+    g.rotateX(Math.PI / 2).rotateX(Math.PI / 2 - tilt).translate(x, -L + bevel / 2 - Math.sin(tilt) * lift, (aftH + dp) / 2 + Math.cos(tilt) * lift);
+  const bevelLen = Math.hypot(bevel, dp - aftH);
+  // Recessed dark-blue vent panel with its three round ports, and a slotted disc beside it.
+  b.ext('tail-module', 'tailModule', onBevel(new THREE.BoxGeometry(0.92, 0.012, bevelLen - 0.08), 0, 0.004), 'navy', { edges: false });
+  for (const x of [-0.3, 0, 0.3]) {
+    b.ext('tail-module', 'tailModule', onBevel(new THREE.CylinderGeometry(0.11, 0.11, 0.03, 18), x, 0.012), 'gunmetal', { edges: false });
+    b.ext('tail-module', 'tailModule', onBevel(new THREE.CylinderGeometry(0.075, 0.075, 0.034, 16), x, 0.014), 'black', { edges: false });
+  }
+  b.ext('tail-module', 'tailModule', onBevel(new THREE.CylinderGeometry(0.075, 0.075, 0.012, 18), 0.585, 0.006), 'offWhite', { edges: false });
+  b.ext('tail-module', 'tailModule', onBevel(new THREE.BoxGeometry(0.1, 0.016, 0.022), 0.585, 0.012), 'navy', { edges: false });
+  // Tail lights on the aft face.
   for (const s of [1, -1]) {
-    b.ext('tail-module', 'tailModule', move(new THREE.BoxGeometry(0.14, 0.05, 0.08), s * 0.56, -L - 0.02, 0.1), 'navRed', { edges: false });
+    b.ext('tail-module', 'tailModule', move(new THREE.BoxGeometry(0.14, 0.05, 0.06), s * 0.56, -L - 0.02, aftH / 2), 'navRed', { edges: false });
   }
-  // Belly (the backpack's outer face): recessed vernier cluster under the red disc.
+  // Belly (the backpack's outer face): the red disc, and toward the hinge end the vernier well:
+  // a fixed port between the two pop-out nozzles (bones vernierL / vernierR).
   const belly = dp + 0.004;
-  b.ext('tail-thrusters', 'tailModule', move(new THREE.BoxGeometry(0.9, 0.95, 0.01), 0, -1.55, belly - 0.004), 'black', { edges: false });
-  for (const [x, y] of [[-0.22, -1.38], [0.22, -1.38], [0, -1.75]] as const) {
-    // Nozzle rims 1.2 cm proud of the dark panel, their throats dark and a little deeper.
-    b.ext('tail-thrusters', 'tailModule', rot(new THREE.CylinderGeometry(0.16, 0.18, 0.08, 16), 90, 0, 0), 'gunmetal', { pos: [x, y, belly - 0.028], edges: false });
-    b.ext('tail-thrusters', 'tailModule', rot(new THREE.CylinderGeometry(0.1, 0.1, 0.08, 14), 90, 0, 0), 'black', { pos: [x, y, belly - 0.034], edges: false });
+  const vy = TL.vernier[1];
+  b.ext('tail-thrusters', 'tailModule', move(new THREE.BoxGeometry(0.9, 0.6, 0.01), 0, vy - 0.12, belly - 0.004), 'black', { edges: false });
+  b.ext('tail-thrusters', 'tailModule', rot(new THREE.CylinderGeometry(0.13, 0.14, 0.08, 16), 90, 0, 0), 'gunmetal', { pos: [0, vy - 0.27, belly - 0.028], edges: false });
+  b.ext('tail-thrusters', 'tailModule', rot(new THREE.CylinderGeometry(0.085, 0.085, 0.08, 14), 90, 0, 0), 'black', { pos: [0, vy - 0.27, belly - 0.034], edges: false });
+  b.ext('tail-module', 'tailModule', rot(new THREE.CylinderGeometry(0.2, 0.2, 0.02, 24), 90, 0, 0), 'red', { pos: [0, -1.82, belly], edges: false });
+  for (const S of ['L', 'R'] as const) {
+    const bone = `vernier${S}`;
+    // Nozzle along its mount's +Z: flush with the belly at rest, standing out of the well for GERWALK.
+    b.ext('tail-thrusters', bone, new THREE.CylinderGeometry(0.12, 0.15, 0.26, 16).translate(0, 0.13, 0).rotateX(Math.PI / 2), 'gunmetal', { edges: false, joint: 'tailModule' });
+    b.ext('tail-thrusters', bone, new THREE.CylinderGeometry(0.085, 0.085, 0.02, 14).rotateX(Math.PI / 2).translate(0, 0, 0.255), 'black', { edges: false, joint: 'tailModule' });
+    b.marker(`vernierBase${S}`, bone, [0, 0, 0]);
+    b.marker(`vernierMouth${S}`, bone, [0, 0, 0.26]);
   }
-  b.ext('tail-module', 'tailModule', rot(new THREE.CylinderGeometry(0.26, 0.26, 0.02, 24), 90, 0, 0), 'red', { pos: [0.12, -2.12, belly], edges: false });
   b.panelLines('tailModule', [
     ...faceLines('z', -0.004, [[-0.6, -1.2, 0.6, -1.2], [-0.6, -1.2, -0.6, -2.2], [0.6, -1.2, 0.6, -2.2], [-0.6, -2.2, 0.6, -2.2]]),
-    ...faceLines('z', dp + 0.006, [[-0.7, -1.0, 0.7, -1.0], [-0.55, -2.3, 0.55, -2.3]]),
+    ...faceLines('z', dp + 0.006, [[-0.7, -1.0, 0.7, -1.0], [-0.6, -2.1, 0.6, -2.1]]),
   ]);
-  b.marker('tailEnd', 'tailModule', [0, -L, 0.2]);
+  b.marker('tailEnd', 'tailModule', [0, -L, aftH / 2]);
 
   /* antenna boom (bone mast, hinged at the aft face) and the whip that extends from it */
   const mast = new THREE.CylinderGeometry(0.065, 0.065, TL.mastLen - 0.06, 12);
@@ -79,18 +102,14 @@ export function buildTail(b: Builder) {
   // Hikaru's VF-1J: a vermilion band along the fin, parallel to the leading edge.
   const band = finPlate(stripe([[0.08, finLE(0.08) - 0.4], [h - 0.1, finLE(h - 0.1) - 0.4]], 0.24), 0.152);
   // Fold hinge barrel along the root chord (the fold axis), from the leading edge aft.
-  const knuckle = move(new THREE.CylinderGeometry(0.09, 0.09, 0.7, 12), 0, -0.4, 0);
-  const boss = rot(new THREE.CylinderGeometry(0.13, 0.13, 0.06, 14), 0, 0, 90);
+  const knuckle = move(new THREE.CylinderGeometry(0.075, 0.075, 0.7, 12), 0, -0.4, 0);
   for (const [side, boneId] of [['port', 'finL'], ['starboard', 'finR']] as const) {
     const mirror = side === 'starboard';
-    const sx = mirror ? -1 : 1;
     b.ext(`tail-fin-${side}`, boneId, mirror ? mirrorX(fin) : fin, 'white');
     b.ext(`tail-fin-${side}`, boneId, mirror ? mirrorX(band) : band, 'red', { edges: false });
     b.ext(`rudder-${side}`, `rudder${side === 'port' ? 'L' : 'R'}`, mirror ? mirrorX(rudder) : rudder, 'offWhite');
-    // Fold-hinge barrel along the fin root (visible pivot), and the pitch boss it turns on, on the
-    // module's side edge.
+    // Fold-hinge barrel along the fin root (visible pivot).
     b.ext(`tail-fin-${side}`, boneId, knuckle.clone(), 'navy', { edges: false, joint: 'tailModule' });
-    b.ext('tail-module', 'tailModule', boss.clone(), 'navy', { pos: [sx * (TL.halfWidth + 0.03), TL.finRoot[1] - 0.12, TL.finRoot[2]], edges: false, joint: boneId });
     const sfx = side === 'port' ? 'L' : 'R';
     b.marker(`finRoot${sfx}`, boneId, [0, 0, 0]);
     b.marker(`finTip${sfx}`, boneId, [0, (FIN.tipLE + FIN.tipTE) / 2, -h]);

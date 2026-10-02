@@ -44,6 +44,9 @@ const TAIL_HINGE = [...TL.hinge];
 const FIN_ROOT = [...TL.finRoot];
 const MAST = [0, -TL.length, 0.15];
 const WHIP_IN = [0, -TL.mastLen + 0.02, 0];
+/** Pop-out vernier nozzles: flush in the belly's well, or stood up out of it (GERWALK). */
+const VERNIER_IN = [TL.vernier[0], TL.vernier[1], TL.depth - 0.25];
+const VERNIER_OUT = [TL.vernier[0], TL.vernier[1], TL.depth - 0.06];
 const WING_PIVOT = [...D.wing.pivot];
 const WING_PIVOT_R = [-WING_PIVOT[0], WING_PIVOT[1], WING_PIVOT[2]];
 const WING_STOW = [...D.wing.stow];
@@ -102,8 +105,9 @@ const FIGHTER: PoseKey = {
   wingL: { r: [0, 0, -20] },
   wingR: { r: [0, 0, 20] },
   ...sym({
-    // Fins canted 22.5° outboard (five-view front view).
+    // Fins canted 22.5° outboard (five-view front view); the backpack's verniers flush.
     fin: { r: [0, -TL.finCant, 0], p: FIN_ROOT },
+    vernier: { r: [0, 0, 0], p: VERNIER_IN },
     // Legs hang from the intake lips, level with the fuselage under the gloves.
     hipRail: { p: [...L.railFighter] },
     hipRailExt: { p: [0, 0, 0] },
@@ -147,8 +151,12 @@ const G_UPRIGHT = [G_EDGE[0], G_EDGE[1] - A.hingePin[1], G_EDGE[2] - A.hingePin[
 export const SHOULDER_CLEVIS: readonly [number, number, number] = [G_EDGE[0], G_EDGE[1], G_EDGE[2]];
 /** For Battroid the block lifts clear of the back on its rails before it settles on the wings. */
 const G_BLOCK_SLIDE = 0.65;
-/** GERWALK: the back block stands leaning forward on the back (degrees from its flight attitude). */
-const G_BLOCK_TILT = 150;
+/**
+ * GERWALK: the back block lies flipped over flat on the back behind the cockpit (the GERWALK kit),
+ * its hinge end here: its fins, folded flat under it, just clear of the dorsal skin and gloves.
+ */
+const G_BLOCK = [0, 1.75, -1.0];
+
 
 const GERWALK: PoseKey = {
   // Converting from the Fighter the craft holds its spot (the ground solve sets the height).
@@ -161,21 +169,23 @@ const GERWALK: PoseKey = {
   head: { r: [0, 0, 0], p: [...D.head.stowed] },
   laserL: { r: [180, 0, 0] },
   laserR: { r: [180, 0, 0] },
-  // Transformation sheet: the fins fold, then the whole back block rises (past vertical, as an
-  // airbrake) and stands on the back leaning forward, as in the GERWALK line art (MAHQ) and on the
-  // VF-1J GERWALK kit: the aft vent grille facing forward and up, the red disc on top and the
-  // vernier cluster facing up and aft; the antenna boom stands vertical and its whip is out.
-  tailModule: { r: [G_BLOCK_TILT, 0, 0], p: [0, TL.hinge[1] + 1.0, TL.hinge[2] - 0.13] },
-  mast: { r: [90 - G_BLOCK_TILT, 0, 0], p: MAST },
+  // Transformation sheet: the fins fold, then the whole back block rises as an airbrake and goes
+  // on over onto the back. On the VF-1J GERWALK kit it lies there flat behind the cockpit: the aft
+  // face's bevel, with the three-port vent, faces forward and up, the red disc is on top, two
+  // vernier nozzles stand up at its rear and the antenna stands up just behind its front edge
+  // (the boom slid 0.3 m into the block), its whip out.
+  tailModule: { r: [180, 0, 0], p: G_BLOCK },
+  mast: { r: [-90, 0, 0], p: [0, -TL.length + 0.3, 0.15] },
   whip: { p: [0, -TL.mastLen - TL.whipLen + 0.3, 0] },
   wingRootL: { p: WING_PIVOT },
   wingRootR: { p: WING_PIVOT_R },
   wingL: { r: [0, 0, -20] },
   wingR: { r: [0, 0, 20] },
   ...sym({
-    // Transformation sheet: the fins fold down flat before the back block rises into the airbrake;
-    // they stay flat (turning against the block) as it rises, lying outboard at its base.
-    fin: { r: [-G_BLOCK_TILT, -90, 0], p: FIN_ROOT },
+    // Transformation sheet: the fins fold down flat before the back block rises into the airbrake,
+    // and go over with it: they lie flat under the block, pointing forward (the kit).
+    fin: { r: [0, -90, 0], p: FIN_ROOT },
+    vernier: { r: [-40, 0, 0], p: VERNIER_OUT },
     // Thighs stay level along the fuselage; the shins drop 90° at the knees (VTOL nozzles down).
     hipRail: { p: [...L.railFighter] },
     hipRailExt: { p: [0, 0, 0] },
@@ -232,6 +242,7 @@ const BATTROID: PoseKey = {
     // they are the blocks flanking the head (Battroid schematic, ±0.9–1.8 m) and from behind the
     // blocks above the shoulders (rear art), with the backpack's red disc and verniers clear.
     fin: { r: [0, -140, 0], p: FIN_ROOT },
+    vernier: { r: [0, 0, 0], p: VERNIER_IN },
     hipRail: { p: [...L.railBattroid] },
     hipRailExt: { p: RAIL_EXT },
     // The legs splay 3° at the thigh joint under the intakes, which stay upright beside their rails.
@@ -288,8 +299,9 @@ const WIN_A: Windows = {
     upperArm: [0.8, 0.88],
     elbow: [0.72, 0.9],
     wrist: [0.7, 0.88],
-    // The fins fold flat first (waypoint), then turn against the rising block so they stay flat.
+    // The fins fold flat first (waypoint) and go over with the block; the verniers stand up last.
     fin: [0.4, 0.82],
+    vernier: [0.84, 0.96],
   }),
   // "The whole block on the back rises and becomes an airbrake": it lifts off the waist keel
   // (waypoint), then flips forward over the back; the antenna boom swings up with it, so it never
@@ -303,7 +315,7 @@ const WIN_A: Windows = {
 const WIN_B: Windows = {
   root: [0.1, 0.6],
   whip: [0, 0.12],
-  mast: [0.12, 0.3],
+  mast: [0.22, 0.3],
   ...sym2({
     // Legs: the swing-bar locks let go, then the knees straighten while the hip carriages run
     // down the torso to the waist, the thighs sliding up through the hips so the intakes flank it.
@@ -315,8 +327,10 @@ const WIN_B: Windows = {
     knee: [0.1, 0.55],
     ankle: [0.1, 0.6],
     legSlide: [0.35, 0.75],
-    // Fins swing back on their fold hinges while the backpack is lifted clear.
+    // Fins swing back on their fold hinges while the backpack is lifted clear (its verniers first
+    // sink back into their well).
     fin: [0.14, 0.34],
+    vernier: [0, 0.1],
     // Arms swing down to the Battroid pose (the blocks unlatch, then turn back upright as the body
     // stands), then the shoulder locks clamp them into the back.
     shoulder: [0.52, 0.6],
@@ -408,6 +422,8 @@ const WAYPOINTS: Record<string, Waypoint[]> = (() => {
     { seg: 'A', w: [0.55, 0.7], r: [0, 0, -16] },
     { seg: 'A', w: [0.7, 0.8], r: [GERWALK.upperArmR.r![0], 0, -16] },
   ];
+  // For Battroid the antenna boom swings down along the block before it slides in.
+  out.mast = [{ seg: 'B', w: [0.12, 0.22], r: [0, 0, 0] }];
   // The back block first lifts its channel clear of the waist keel it straddles in Fighter mode.
   out.tailModule = [
     { seg: 'A', w: [0.3, 0.4], p: [0, TL.hinge[1], TL.hinge[2] - 0.47] },
