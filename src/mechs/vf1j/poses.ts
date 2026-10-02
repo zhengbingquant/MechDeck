@@ -15,7 +15,7 @@ export type EvaluatedPose = Record<string, EvaluatedJoint>;
 const L = D.leg;
 const A = D.arm;
 /** The hip rail's lower section runs out along the rail below the waist for Battroid. */
-const RAIL_EXT = [0, 1, 2].map((i) => (-(L.railFighter[i] - L.railBattroid[i]) / (L.railFighter[1] - L.railBattroid[1])) * 2.45);
+const RAIL_EXT = [0, 1, 2].map((i) => (-(L.railFighter[i] - L.railBattroid[i]) / (L.railFighter[1] - L.railBattroid[1])) * L.railExtRun);
 const N = D.nose;
 const TL = D.tail;
 

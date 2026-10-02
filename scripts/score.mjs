@@ -3,7 +3,9 @@
 // (everything the page border can't reach without crossing ink). Both are registered by the
 // published overall dimension, then compared pixel by pixel. Writes shots/score-<view>.png:
 // grey = both, red = only the line art (model missing there), blue = only the model (excess).
-// Needs `npm run preview` (http://localhost:4173) and shots/ref/.
+// Needs `npm run preview` (http://localhost:4173) and your own copies of the official
+// line art in shots/ref/ (copyrighted, so not part of this repository; the file names
+// are in VIEWS below).
 // Usage: node scripts/score.mjs [view ...]
 import { chromium } from '@playwright/test';
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';

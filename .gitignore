@@ -1,12 +1,15 @@
+# dependencies and build output
 node_modules
 dist
+
+# test and screenshot artefacts (shots/ also holds the reference line art)
 test-results
 playwright-report
 shots
-*.log
 
+# local tooling, logs and secrets
 .vercel
 .env*
-scratch
 .claude
-playwright-report
+scratch
+*.log

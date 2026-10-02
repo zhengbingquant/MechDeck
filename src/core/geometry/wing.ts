@@ -90,8 +90,3 @@ export function surfaceLine(p: Planform, pts: [number, number][], side: 'upper' 
   }
   return out;
 }
-
-/** Unit hinge axis between two points (wing frame), e.g. a control surface's hinge line. */
-export function hingeAxis(a: readonly [number, number, number], b: readonly [number, number, number]): THREE.Vector3 {
-  return new THREE.Vector3(b[0] - a[0], b[1] - a[1], b[2] - a[2]).normalize();
-}

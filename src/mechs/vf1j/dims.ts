@@ -128,6 +128,8 @@ export const D = {
     // stance leaves room for the stowed arms between them), ±1.6 m in Battroid.
     railBattroid: [1.6, -0.67, 0] as const,
     railFighter: [1.55, 6.45, 0.1] as const,
+    /** The hip rail's telescoping lower section runs out this far (along y) below the fixed section for Battroid. */
+    railExtRun: 2.45,
     intakeLen: 2.2, // also the hip slide: legs hang from the intake lip in flight
     /**
      * The hip pivot sits this far inboard of the leg's axis, in the slot between the rail and the

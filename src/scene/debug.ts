@@ -37,10 +37,3 @@ export function debugHandle(): MechDeckDebug {
   if (!window.__mechdeck) window.__mechdeck = { ready: false };
   return window.__mechdeck;
 }
-
-/** Project a world point into CSS pixels relative to the page. */
-export function projectToPage(p: THREE.Vector3, camera: THREE.Camera, canvas: HTMLCanvasElement) {
-  const v = p.clone().project(camera);
-  const r = canvas.getBoundingClientRect();
-  return { x: r.left + ((v.x + 1) / 2) * r.width, y: r.top + ((1 - v.y) / 2) * r.height, z: v.z };
-}

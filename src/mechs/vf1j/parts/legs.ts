@@ -71,8 +71,6 @@ export const KNEE_BACK = [0, -0.1, -L.kneeFront - 0.55] as const;
 const RAIL_B = L.railBattroid;
 const RAIL_F = L.railFighter;
 export const RAIL_DIR = [0, 1, 2].map((i) => (RAIL_F[i] - RAIL_B[i]) / (RAIL_F[1] - RAIL_B[1])) as unknown as readonly [number, number, number];
-/** The telescoping lower section runs out this far (along y) below the fixed section for Battroid. */
-export const RAIL_EXT_RUN = 2.45;
 /**
  * Track section relative to the carriage path (port): 6 cm wide inboard of the block, 20 cm deep,
  * in the gap between the stowed arm and the nacelle's calf in Fighter mode.

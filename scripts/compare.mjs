@@ -1,7 +1,8 @@
 // Accuracy check: overlays official line art (red ink) on a near-orthographic
 // render of the model at matched scale, so proportion errors are visible.
-// Needs `npm run preview` (http://localhost:4173) and the reference images in
-// shots/ref/ (see scripts/ref-grab.mjs).
+// Needs `npm run preview` (http://localhost:4173) and your own copies of the
+// official line art in shots/ref/ (copyrighted, so not part of this repository;
+// see scripts/ref-grab.mjs).
 // Usage: node scripts/compare.mjs [view ...]   (default: all views)
 import { chromium } from '@playwright/test';
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';

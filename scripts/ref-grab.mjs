@@ -1,5 +1,7 @@
 // Reference research helper: opens a page in real Chrome, lists its images and
-// saves the large ones to shots/ref/ (for side-by-side comparison only).
+// saves the large ones to shots/ref/ (for side-by-side comparison only). The images
+// belong to their owners: keep them for personal comparison, out of the repository
+// (shots/ is git-ignored), and follow the source site's terms.
 // Usage: node scripts/ref-grab.mjs <url> [prefix]
 import { chromium } from '@playwright/test';
 import { mkdirSync, writeFileSync } from 'node:fs';
