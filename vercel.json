@@ -9,5 +9,19 @@
       "source": "/assets/(.*)",
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
     }
+  ],
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "variable-liard.vercel.app" }],
+      "destination": "https://mechdeck.vercel.app/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "variable-tehbingquan-7996.vercel.app" }],
+      "destination": "https://mechdeck.vercel.app/:path*",
+      "permanent": true
+    }
   ]
 }

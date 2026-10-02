@@ -1,6 +1,6 @@
 // Smoke test of a deployed build: loads the page on desktop and phone, parks the
 // Fighter on its gear, transforms, drives in pilot mode and checks sound + console.
-// Usage: node scripts/livecheck.mjs https://variable-liard.vercel.app
+// Usage: node scripts/livecheck.mjs https://mechdeck.vercel.app
 import { chromium } from '@playwright/test';
 
 const base = process.argv[2] ?? 'http://localhost:4173';
