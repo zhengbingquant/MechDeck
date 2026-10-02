@@ -1,16 +1,48 @@
-# MechDeck
+<p align="center">
+  <img src="public/favicon.svg" width="84" alt="MechDeck logo">
+</p>
 
-An interactive 3D hangar of transformable mechs that runs entirely in the browser.
-Spin the **VF-1J Valkyrie** round, transform it between Fighter, GERWALK and Battroid
-on a real bone rig, x-ray it to see the engines and actuators, fly it on a flight
-model, or walk it across the hangar floor.
+<h1 align="center">MechDeck</h1>
 
-**[Live demo](https://variable-liard.vercel.app)** · [MIT license](LICENSE) · fan-made, not affiliated with Studio Nue / Big West
+<p align="center">
+  <b>An interactive 3D hangar of transformable mechs, right in your browser.</b><br>
+  Transform, fly, pilot and x-ray the VF-1J Valkyrie on a real bone rig.
+</p>
 
-It is built with React, three.js and react-three-fiber. It is a static site with no
-backend and no API keys, and it runs on desktop and on touch devices (a WebGL2-capable
-browser is all it needs). The first mech is the VF-1J Valkyrie (Hikaru Ichijyo's
-Vermilion 1); more can be added to the hangar (see [Adding a mech](#adding-a-mech)).
+<p align="center">
+  <a href="https://mechdeck.vercel.app"><img alt="Live demo: mechdeck.vercel.app" src="https://img.shields.io/badge/live_demo-mechdeck.vercel.app-e2402f?style=flat-square"></a>
+  <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-1f63ff?style=flat-square"></a>
+  <img alt="three.js r182" src="https://img.shields.io/badge/three.js-r182-000000?style=flat-square&logo=threedotjs&logoColor=white">
+  <img alt="React 19" src="https://img.shields.io/badge/React-19-20232a?style=flat-square&logo=react&logoColor=61dafb">
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-strict-3178c6?style=flat-square&logo=typescript&logoColor=white">
+</p>
+
+<p align="center"><b>English</b> · <a href="README.zh-CN.md">简体中文</a></p>
+
+<p align="center">
+  <img src="docs/media/transform.gif" width="600" alt="The VF-1J transforming from Fighter to GERWALK to Battroid">
+</p>
+
+MechDeck runs entirely in the browser. Spin the **VF-1J Valkyrie** round, transform it
+between Fighter, GERWALK and Battroid on a real bone rig, x-ray it to see the engines and
+actuators, fly it on a flight model, or walk it across the hangar floor.
+
+**[Try the live demo →](https://mechdeck.vercel.app)** It is a static site with no backend
+and no API keys, and it runs on desktop and on touch devices (a WebGL2-capable browser is all
+it needs). Built with React, three.js and react-three-fiber. The VF-1J is the first mech in
+the hangar; more can be added (see [Adding a mech](#adding-a-mech)).
+
+MechDeck is fan-made and not affiliated with Studio Nue / Big West.
+
+## Gallery
+
+| Fighter | GERWALK | Battroid |
+| :---: | :---: | :---: |
+| <img src="docs/media/fighter.jpg" width="260" alt="Fighter mode, parked on its landing gear"> | <img src="docs/media/gerwalk.jpg" width="260" alt="GERWALK mode with the GU-11 gun pod"> | <img src="docs/media/battroid.jpg" width="260" alt="Battroid mode"> |
+| **Anatomy x-ray** | **Flight lab** | **Pilot mode** |
+| <img src="docs/media/anatomy.jpg" width="260" alt="Cutaway view: engines, ducts, actuators and gears"> | <img src="docs/media/flight-lab.jpg" width="260" alt="Flight lab: banking turn with the HUD and force vectors"> | <img src="docs/media/pilot-mode.jpg" width="260" alt="Pilot mode: the GERWALK skimming on its foot jets"> |
+
+Every picture here is a live render of the app, made by `scripts/readme-media.mjs`.
 
 ## Features
 
@@ -96,10 +128,11 @@ It is developed on Node 24. `npm run build` type-checks and writes a static site
 | `npm run shots` | screenshots of named views (needs `npm run preview` running) |
 | `npm run flightcheck` | flies a short flight-lab sortie and screenshots it (same) |
 | `node scripts/livecheck.mjs <url>` | smoke test of a deployed build, on desktop and phone |
+| `node scripts/readme-media.mjs` | re-renders the README's GIF and gallery (needs `npm run preview` and ffmpeg) |
 
 ## Architecture
 
-```
+```text
 src/core/            mech-agnostic machinery
   types.ts           MechDefinition / MechRuntime contracts the app talks to
   builder.ts         puts meshes on bones; outlines, panel lines, part registry bookkeeping
@@ -119,7 +152,8 @@ src/audio/           Web Audio synthesiser and sound cues
 src/ui/              app shell, panels, HUD, search
 src/state/store.ts   zustand store shared by the scene and the UI
 e2e/                 Playwright tests
-scripts/             screenshot, smoke-test and accuracy tools
+scripts/             screenshot, smoke-test, README-media and accuracy tools
+docs/media/          the README's GIF and gallery
 ```
 
 ### Adding a mech
@@ -144,6 +178,7 @@ scripts/             screenshot, smoke-test and accuracy tools
 ## Accuracy and sources
 
 Flight model: the published figures below are calibration targets, enforced by tests.
+
 - 18.5 t take-off mass
 - 2 × 11,500 kgf thrust (23,000 kgf in overboost)
 - Mach 2.71 at 10,000 m and Mach 3.87 at 30,000+ m
@@ -153,6 +188,7 @@ Flight model: the published figures below are calibration targets, enforced by t
 Sources: Macross Compendium and MAHQ.
 
 Estimated values:
+
 - wing area (the F-14's scaled by span²)
 - the aerodynamic coefficients
 - the thrust lapse, which is calibrated so the model reproduces both published top speeds
