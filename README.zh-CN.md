@@ -23,10 +23,6 @@
   <img src="docs/media/transform.gif" width="600" alt="VF-1J 从战机形态变形为 GERWALK，再变为人形形态">
 </p>
 
-<p align="center">
-  <a href="https://www.bilibili.com/video/BV1K5aQ6qEKq"><img alt="在哔哩哔哩观看演示视频" src="https://img.shields.io/badge/watch_the_demo-on_Bilibili-00a1d6?style=flat-square&logo=bilibili&logoColor=white"></a>
-  <a href="https://x.com/neo_7749/status/2106042557776146556"><img alt="在 X 上观看演示视频" src="https://img.shields.io/badge/watch_the_demo-on_X-000000?style=flat-square&logo=x&logoColor=white"></a>
-</p>
 
 MechDeck 完全在浏览器中运行。你可以 360° 旋转查看 **VF-1J 女武神**，在真实的骨骼绑定上让它在战机（Fighter）、GERWALK 与人形（Battroid）三种形态之间变形；用 X 光透视查看引擎和作动器；用飞行模型驾驶它飞行；或者操纵它在机库地面上行走。
 
