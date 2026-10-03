@@ -23,10 +23,6 @@
   <img src="docs/media/transform.gif" width="600" alt="The VF-1J transforming from Fighter to GERWALK to Battroid">
 </p>
 
-<p align="center">
-  <a href="https://x.com/neo_7749/status/2106042557776146556"><img alt="Watch the demo on X" src="https://img.shields.io/badge/watch_the_demo-on_X-000000?style=flat-square&logo=x&logoColor=white"></a>
-  <a href="https://www.bilibili.com/video/BV1K5aQ6qEKq"><img alt="Watch the demo on Bilibili" src="https://img.shields.io/badge/watch_the_demo-on_Bilibili-00a1d6?style=flat-square&logo=bilibili&logoColor=white"></a>
-</p>
 
 MechDeck runs entirely in the browser. Spin the **VF-1J Valkyrie** round, transform it
 between Fighter, GERWALK and Battroid on a real bone rig, x-ray it to see the engines and
